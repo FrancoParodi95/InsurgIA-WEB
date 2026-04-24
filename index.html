@@ -1,0 +1,1413 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>InsurgIA — La plataforma para brokers de seguros</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy:    #060E1C;
+  --navy2:   #0D1B2E;
+  --navy3:   #132847;
+  --blue:    #1D4ED8;
+  --blue2:   #2563EB;
+  --sky:     #60A5FA;
+  --teal:    #0EA5E9;
+  --green:   #059669;
+  --green2:  #10B981;
+  --emerald: #6EE7B7;
+  --amber:   #F59E0B;
+  --red:     #DC2626;
+  --white:   #FFFFFF;
+  --g1:      #F1F5F9;
+  --g2:      #94A3B8;
+  --g3:      #64748B;
+  --g4:      #334155;
+  --border:  rgba(255,255,255,0.07);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--navy);
+  color: var(--white);
+  overflow-x: hidden;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--navy2); }
+::-webkit-scrollbar-thumb { background: var(--blue2); border-radius: 2px; }
+
+/* ── TYPOGRAPHY ── */
+h1,h2,h3,h4,h5 { font-family: 'Syne', sans-serif; line-height: 1.1; }
+
+/* ── PAGES ── */
+.page { display: none; min-height: 100vh; }
+.page.active { display: block; animation: fadeIn .4s ease; }
+@keyframes fadeIn { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+
+/* ── NAV ── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 5%; height: 68px;
+  background: rgba(6,14,28,.88);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  transition: all .3s;
+}
+.logo {
+  display: flex; align-items: center; gap: 10px; cursor: pointer;
+  font-family: 'Syne', sans-serif; font-size: 1.3rem; font-weight: 800;
+  text-decoration: none; color: var(--white);
+}
+.logo-mark {
+  width: 36px; height: 36px; background: var(--blue2); border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: .9rem; font-weight: 800; color: var(--white);
+}
+.logo span { color: var(--sky); }
+.nav-links { display: flex; align-items: center; gap: 2px; }
+.nav-links a {
+  padding: 8px 16px; border-radius: 8px; color: var(--g2);
+  font-size: .9rem; cursor: pointer; transition: all .2s;
+  text-decoration: none; font-weight: 400;
+}
+.nav-links a:hover, .nav-links a.active { color: var(--white); background: rgba(255,255,255,.06); }
+.nav-cta {
+  padding: 9px 22px; background: var(--blue2); color: var(--white) !important;
+  border-radius: 10px; font-weight: 600; font-size: .88rem; cursor: pointer;
+  transition: all .2s; margin-left: 8px;
+}
+.nav-cta:hover { background: var(--blue); transform: translateY(-1px); box-shadow: 0 8px 24px rgba(37,99,235,.4); }
+
+/* ── SECTIONS ── */
+section { padding: 100px 5%; position: relative; }
+section:first-of-type { padding-top: 140px; }
+
+.container { max-width: 1160px; margin: 0 auto; }
+
+/* ── LABEL ── */
+.label {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 6px 14px; border-radius: 20px;
+  background: rgba(37,99,235,.12); border: 1px solid rgba(96,165,250,.2);
+  font-size: .78rem; font-weight: 600; color: var(--sky);
+  letter-spacing: .05em; text-transform: uppercase;
+  margin-bottom: 24px;
+}
+.label-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--sky); animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(.8)} }
+
+/* ── BUTTONS ── */
+.btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 14px 28px; border-radius: 12px; font-weight: 600;
+  font-size: .95rem; cursor: pointer; transition: all .25s;
+  border: none; text-decoration: none; font-family: 'DM Sans', sans-serif;
+}
+.btn-primary { background: var(--blue2); color: var(--white); }
+.btn-primary:hover { background: var(--blue); transform: translateY(-2px); box-shadow: 0 12px 32px rgba(37,99,235,.4); }
+.btn-secondary {
+  background: transparent; color: var(--white);
+  border: 1px solid rgba(255,255,255,.15);
+}
+.btn-secondary:hover { background: rgba(255,255,255,.06); border-color: rgba(255,255,255,.3); transform: translateY(-2px); }
+.btn-green { background: var(--green); color: var(--white); }
+.btn-green:hover { background: var(--green2); transform: translateY(-2px); box-shadow: 0 12px 32px rgba(5,150,105,.4); }
+.btn-lg { padding: 17px 36px; font-size: 1rem; }
+
+/* ── CARDS ── */
+.card {
+  background: var(--navy2); border: 1px solid var(--border);
+  border-radius: 16px; padding: 28px;
+  transition: all .3s;
+}
+.card:hover { border-color: rgba(96,165,250,.2); transform: translateY(-4px); box-shadow: 0 20px 60px rgba(0,0,0,.4); }
+
+/* ── GRID ── */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; }
+.grid-4 { display: grid; grid-template-columns: repeat(4,1fr); gap: 20px; }
+
+/* ── STAT BOX ── */
+.stat { text-align: center; padding: 32px 20px; }
+.stat-num { font-family: 'Syne',sans-serif; font-size: 2.8rem; font-weight: 800; line-height: 1; margin-bottom: 8px; }
+.stat-label { font-size: .88rem; color: var(--g2); }
+
+/* ── DIVIDER ── */
+.divider { height: 1px; background: var(--border); margin: 0 5%; }
+
+/* ── PILL ── */
+.pill { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: .78rem; font-weight: 600; }
+.pill-blue { background: rgba(37,99,235,.15); color: var(--sky); border: 1px solid rgba(96,165,250,.2); }
+.pill-green { background: rgba(5,150,105,.15); color: var(--emerald); border: 1px solid rgba(110,231,183,.2); }
+.pill-amber { background: rgba(245,158,11,.15); color: var(--amber); border: 1px solid rgba(245,158,11,.25); }
+.pill-red { background: rgba(220,38,38,.12); color: #FCA5A5; border: 1px solid rgba(220,38,38,.25); }
+
+/* ── SECTION TITLE ── */
+.section-title { font-size: clamp(2rem, 4vw, 3rem); font-weight: 800; margin-bottom: 16px; }
+.section-sub { font-size: 1.1rem; color: var(--g2); max-width: 560px; line-height: 1.7; }
+
+/* ── BACK BUTTON ── */
+.back-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  color: var(--g2); font-size: .88rem; cursor: pointer;
+  margin-bottom: 40px; transition: color .2s;
+  background: none; border: none; font-family: 'DM Sans', sans-serif;
+}
+.back-btn:hover { color: var(--white); }
+
+/* ── FOOTER ── */
+footer {
+  background: var(--navy2); border-top: 1px solid var(--border);
+  padding: 60px 5% 32px;
+}
+.footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px; margin-bottom: 48px; }
+.footer-brand p { color: var(--g2); font-size: .9rem; line-height: 1.7; margin-top: 16px; max-width: 280px; }
+.footer-col h4 { font-size: .88rem; font-weight: 600; color: var(--g1); margin-bottom: 16px; letter-spacing: .04em; text-transform: uppercase; }
+.footer-col a { display: block; color: var(--g2); font-size: .88rem; padding: 4px 0; cursor: pointer; transition: color .2s; text-decoration: none; }
+.footer-col a:hover { color: var(--white); }
+.footer-bottom { border-top: 1px solid var(--border); padding-top: 24px; display: flex; justify-content: space-between; align-items: center; }
+.footer-bottom p { font-size: .82rem; color: var(--g3); }
+
+/* ── HERO SPECIFIC ── */
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 8px 16px; border-radius: 24px;
+  background: rgba(5,150,105,.1); border: 1px solid rgba(16,185,129,.2);
+  font-size: .82rem; color: var(--emerald); margin-bottom: 32px;
+}
+.hero-title { font-size: clamp(2.8rem, 5.5vw, 4.8rem); font-weight: 800; line-height: 1.05; margin-bottom: 24px; }
+.hero-title em { font-style: normal; color: var(--sky); }
+.hero-sub { font-size: 1.15rem; color: var(--g2); max-width: 540px; line-height: 1.75; margin-bottom: 40px; }
+
+.hero-cta { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; margin-bottom: 72px; }
+
+.hero-proof { display: flex; align-items: center; gap: 24px; }
+.proof-item { display: flex; align-items: center; gap: 8px; font-size: .85rem; color: var(--g2); }
+.proof-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--emerald); }
+
+/* Stats bar */
+.stats-bar {
+  display: grid; grid-template-columns: repeat(3,1fr);
+  background: var(--navy2); border: 1px solid var(--border);
+  border-radius: 16px; overflow: hidden;
+}
+.stats-bar .stat { border-right: 1px solid var(--border); padding: 32px; text-align: left; }
+.stats-bar .stat:last-child { border-right: none; }
+
+/* ── PROCESS STEP ── */
+.process-step {
+  display: flex; gap: 24px; align-items: flex-start;
+  padding: 28px; border-radius: 16px;
+  border: 1px solid var(--border); background: var(--navy2);
+  transition: all .3s;
+}
+.process-step:hover { border-color: rgba(96,165,250,.2); transform: translateX(6px); }
+.step-num {
+  width: 44px; height: 44px; border-radius: 12px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Syne',sans-serif; font-size: 1rem; font-weight: 800;
+}
+
+/* ── FEATURE ICON ── */
+.feat-icon {
+  width: 52px; height: 52px; border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.4rem; margin-bottom: 20px;
+}
+
+/* ── PRICING ── */
+.pricing-card { position: relative; border-radius: 20px; padding: 36px; background: var(--navy2); border: 1px solid var(--border); }
+.pricing-card.featured { border-color: var(--blue2); background: linear-gradient(135deg, rgba(37,99,235,.12), rgba(6,14,28,1)); }
+.pricing-badge {
+  position: absolute; top: -14px; left: 50%; transform: translateX(-50%);
+  padding: 6px 20px; background: var(--blue2); border-radius: 20px;
+  font-size: .78rem; font-weight: 700; color: var(--white); white-space: nowrap;
+}
+.price-num { font-family: 'Syne',sans-serif; font-size: 3rem; font-weight: 800; line-height: 1; }
+.price-period { font-size: .9rem; color: var(--g2); font-weight: 400; }
+.price-item { display: flex; align-items: flex-start; gap: 10px; padding: 8px 0; font-size: .9rem; color: var(--g2); border-bottom: 1px solid var(--border); }
+.price-item:last-child { border-bottom: none; }
+.price-item svg { flex-shrink: 0; margin-top: 3px; }
+.price-check { color: var(--emerald); font-size: 1rem; flex-shrink: 0; margin-top: 2px; }
+
+/* ── COMPARISON TABLE ── */
+.comp-table { width: 100%; border-collapse: collapse; }
+.comp-table th { padding: 16px 20px; text-align: left; font-size: .82rem; font-weight: 600; color: var(--g2); text-transform: uppercase; letter-spacing: .05em; border-bottom: 1px solid var(--border); }
+.comp-table th:first-child { width: 40%; }
+.comp-table td { padding: 14px 20px; font-size: .9rem; border-bottom: 1px solid var(--border); }
+.comp-table tr:last-child td { border-bottom: none; }
+.comp-table tr:hover td { background: rgba(255,255,255,.02); }
+.comp-table .highlight { background: rgba(37,99,235,.06); }
+.comp-table .comp-yes { color: var(--emerald); font-weight: 600; }
+.comp-table .comp-no { color: var(--g4); }
+.comp-table .comp-partial { color: var(--amber); }
+
+/* ── TESTIMONIAL ── */
+.testimonial {
+  background: var(--navy2); border: 1px solid var(--border);
+  border-radius: 20px; padding: 36px; position: relative;
+}
+.testimonial::before {
+  content: '"'; font-family: 'Syne',sans-serif; font-size: 5rem;
+  color: var(--blue2); opacity: .3; position: absolute; top: 16px; left: 28px;
+  line-height: 1;
+}
+.testimonial-text { font-size: 1.05rem; line-height: 1.75; color: var(--g1); margin-bottom: 24px; padding-top: 32px; font-style: italic; }
+.testimonial-author { display: flex; align-items: center; gap: 14px; }
+.author-avatar {
+  width: 44px; height: 44px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--blue2), var(--teal));
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: .9rem;
+}
+.author-name { font-weight: 600; font-size: .92rem; }
+.author-role { font-size: .82rem; color: var(--g2); }
+
+/* ── TEAM CARD ── */
+.team-card { text-align: center; padding: 36px 28px; }
+.team-avatar {
+  width: 80px; height: 80px; border-radius: 50%; margin: 0 auto 20px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Syne',sans-serif; font-size: 1.6rem; font-weight: 800;
+}
+.team-name { font-family: 'Syne',sans-serif; font-size: 1.1rem; font-weight: 700; margin-bottom: 4px; }
+.team-role { font-size: .85rem; color: var(--sky); margin-bottom: 12px; font-weight: 500; }
+.team-bio { font-size: .85rem; color: var(--g2); line-height: 1.65; }
+
+/* ── FAQ ── */
+.faq-item { border-bottom: 1px solid var(--border); }
+.faq-q {
+  width: 100%; text-align: left; padding: 20px 0; background: none; border: none;
+  color: var(--white); font-family: 'DM Sans',sans-serif; font-size: .95rem; font-weight: 500;
+  cursor: pointer; display: flex; justify-content: space-between; align-items: center;
+  transition: color .2s;
+}
+.faq-q:hover { color: var(--sky); }
+.faq-a { padding: 0 0 20px; color: var(--g2); font-size: .9rem; line-height: 1.75; display: none; }
+.faq-a.open { display: block; animation: fadeIn .2s ease; }
+.faq-icon { width: 24px; height: 24px; border-radius: 50%; background: rgba(255,255,255,.06); display: flex; align-items: center; justify-content: center; font-size: .9rem; flex-shrink: 0; transition: transform .2s; }
+.faq-icon.open { transform: rotate(45deg); }
+
+/* ── CTA SECTION ── */
+.cta-section {
+  background: linear-gradient(135deg, rgba(37,99,235,.15), rgba(14,165,233,.08));
+  border: 1px solid rgba(96,165,250,.15); border-radius: 24px;
+  padding: 72px; text-align: center;
+}
+.cta-section h2 { font-size: clamp(2rem, 3.5vw, 3rem); margin-bottom: 16px; }
+.cta-section p { color: var(--g2); max-width: 520px; margin: 0 auto 40px; font-size: 1.05rem; }
+.cta-actions { display: flex; align-items: center; justify-content: center; gap: 16px; flex-wrap: wrap; }
+
+/* ── CONTACT FORM ── */
+.form-group { margin-bottom: 20px; }
+.form-group label { display: block; font-size: .85rem; color: var(--g2); margin-bottom: 8px; font-weight: 500; }
+.form-group input, .form-group select, .form-group textarea {
+  width: 100%; padding: 13px 16px; background: var(--navy3);
+  border: 1px solid var(--border); border-radius: 10px; color: var(--white);
+  font-family: 'DM Sans',sans-serif; font-size: .92rem; transition: border-color .2s;
+  outline: none;
+}
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+  border-color: var(--blue2);
+}
+.form-group select option { background: var(--navy2); }
+.form-group textarea { min-height: 120px; resize: vertical; }
+
+/* ── GLOW ── */
+.glow-blue { position: absolute; width: 600px; height: 600px; border-radius: 50%; background: radial-gradient(circle, rgba(37,99,235,.12) 0%, transparent 70%); pointer-events: none; }
+
+/* ── VALUE TABLE ── */
+.value-row { display: flex; align-items: center; gap: 20px; padding: 20px; border-radius: 12px; transition: background .2s; }
+.value-row:hover { background: rgba(255,255,255,.03); }
+.value-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0; }
+.value-title { font-weight: 600; font-size: .95rem; margin-bottom: 4px; }
+.value-desc { font-size: .85rem; color: var(--g2); }
+
+/* ── MOBILE HAMBURGER ── */
+.hamburger {
+  display: none; flex-direction: column; gap: 5px;
+  cursor: pointer; padding: 8px; background: none; border: none;
+}
+.hamburger span {
+  width: 24px; height: 2px; background: var(--white);
+  border-radius: 2px; transition: all .3s;
+}
+.mobile-menu {
+  display: none; position: fixed; top: 68px; left: 0; right: 0;
+  background: rgba(6,14,28,.98); backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border); padding: 16px 5% 24px;
+  z-index: 99; flex-direction: column; gap: 4px;
+}
+.mobile-menu.open { display: flex; }
+.mobile-menu a {
+  padding: 12px 16px; border-radius: 10px; color: var(--g2);
+  font-size: .95rem; cursor: pointer; transition: all .2s;
+  text-decoration: none; border: 1px solid transparent;
+}
+.mobile-menu a:hover { color: var(--white); background: rgba(255,255,255,.06); }
+.mobile-menu .nav-cta-m {
+  margin-top: 8px; padding: 13px 20px; background: var(--blue2);
+  color: var(--white) !important; border-radius: 10px;
+  font-weight: 600; text-align: center;
+}
+
+/* ── MOBILE ── */
+@media(max-width:768px) {
+  .grid-2,.grid-3,.grid-4 { grid-template-columns: 1fr !important; }
+  .footer-grid { grid-template-columns: 1fr 1fr; }
+  .stats-bar { grid-template-columns: 1fr; }
+  .stats-bar .stat { border-right: none; border-bottom: 1px solid var(--border); }
+  .nav-links { display: none; }
+  .hamburger { display: flex; }
+  section { padding: 60px 5%; }
+  section:first-of-type { padding-top: 110px; }
+  .cta-section { padding: 36px 20px; }
+  .hero-title { font-size: clamp(2.2rem, 8vw, 3rem); }
+  .section-title { font-size: clamp(1.8rem, 6vw, 2.5rem); }
+  /* Contact page 2-col → 1-col */
+  #page-contacto .container > div[style*="grid-template-columns:1fr 1fr"] {
+    display: flex !important; flex-direction: column !important; gap: 40px !important;
+  }
+  /* Process steps — remove hover transform on mobile */
+  .process-step:hover { transform: none; }
+  /* Team grid override */
+  .grid-2[style*="max-width:800px"] { max-width: 100% !important; }
+  /* Pricing featured card */
+  .pricing-card.featured { margin-top: 0 !important; margin-bottom: 0 !important; }
+  /* Footer grid */
+  .footer-grid { grid-template-columns: 1fr !important; gap: 32px; }
+  /* Timeline */
+  .timeline-line { display: none; }
+  /* Hero CTA stack */
+  .hero-cta { flex-direction: column; align-items: flex-start; }
+  .hero-cta .btn { width: 100%; justify-content: center; }
+  /* CTA actions */
+  .cta-actions { flex-direction: column; align-items: center; }
+  .cta-actions .btn { width: 100%; max-width: 320px; justify-content: center; }
+  /* Stats bar */
+  .stats-bar { border-radius: 12px; }
+}
+
+@media(max-width:480px) {
+  nav { padding: 0 4%; }
+  section { padding: 48px 4%; }
+  .hero-badge { font-size: .72rem; }
+  .card { padding: 20px; }
+  .pricing-card { padding: 24px; }
+  .cta-section { padding: 28px 16px; }
+  .footer-grid { grid-template-columns: 1fr !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- ██████ NAV ██████ -->
+<nav id="main-nav">
+  <a class="logo" onclick="go('home')">
+    <div class="logo-mark">I</div>
+    Insurg<span>IA</span>
+  </a>
+  <div class="nav-links">
+    <a onclick="go('home')" class="active" id="nav-home">Inicio</a>
+    <a onclick="go('producto')" id="nav-producto">Producto</a>
+    <a onclick="go('precios')" id="nav-precios">Precios</a>
+    <a onclick="go('nosotros')" id="nav-nosotros">Nosotros</a>
+    <a onclick="go('contacto')" id="nav-contacto">Contacto</a>
+    <a onclick="go('contacto')" class="nav-cta">Empieza a ahorrar →</a>
+  </div>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobile-menu">
+  <a onclick="go('home');closeMenu()">Inicio</a>
+  <a onclick="go('producto');closeMenu()">Producto</a>
+  <a onclick="go('precios');closeMenu()">Precios</a>
+  <a onclick="go('nosotros');closeMenu()">Nosotros</a>
+  <a onclick="go('contacto');closeMenu()">Contacto</a>
+  <a class="nav-cta-m" onclick="go('contacto');closeMenu()">Empieza a ahorrar →</a>
+</div>
+
+<!-- ████████████████████████████████
+     PAGE: HOME
+████████████████████████████████ -->
+<div class="page active" id="page-home">
+
+  <!-- HERO -->
+  <section style="padding-top:140px; padding-bottom:80px; position:relative; overflow:hidden;">
+    <div class="glow-blue" style="top:-200px; left:-100px;"></div>
+    <div class="glow-blue" style="top:100px; right:-200px; background:radial-gradient(circle, rgba(14,165,233,.08) 0%, transparent 70%);"></div>
+    <div class="container">
+      <div class="hero-badge">
+        <span class="proof-dot"></span>
+        Validado por los mejores expertos del sector · Lima, Perú
+      </div>
+      <h1 class="hero-title">
+        El broker moderno<br>opera con <em>InsurgIA</em>
+      </h1>
+      <p class="hero-sub">
+        Automatizamos el ciclo completo de cotización de seguros corporativos. De 3 días a 30 minutos. Ahorra hasta 66% del costo por póliza desde el primer mes.
+      </p>
+      <div class="hero-cta">
+        <button class="btn btn-primary btn-lg" onclick="go('contacto')">Empieza a ahorrar este mes →</button>
+        <button class="btn btn-secondary btn-lg" onclick="go('producto')">Ver cómo funciona</button>
+      </div>
+      <div class="hero-proof">
+        <div class="proof-item"><span class="proof-dot"></span> 7 etapas automatizadas</div>
+        <div class="proof-item"><span class="proof-dot"></span> Validado por los mejores expertos del sector · Lima, Perú</div>
+        <div class="proof-item"><span class="proof-dot"></span> Implementación en hasta 3 meses</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS BAR -->
+  <section style="padding:0 5% 80px;">
+    <div class="container">
+      <div class="stats-bar">
+        <div class="stat">
+          <div class="stat-num" style="color:var(--sky);">$13.48</div>
+          <div class="stat-label">Costo actual por póliza sin InsurgIA</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num" style="color:var(--emerald);">$5.00</div>
+          <div class="stat-label">Costo por póliza con InsurgIA</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num" style="background:linear-gradient(135deg,var(--sky),var(--emerald));-webkit-background-clip:text;-webkit-text-fill-color:transparent;">−66%</div>
+          <div class="stat-label">Ahorro máximo por póliza a alto volumen</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- VALUE PROPOSITION -->
+  <section>
+    <div class="container">
+      <div style="text-align:center; margin-bottom:64px;">
+        <div class="label"><span class="label-dot"></span>Value Proposition</div>
+        <h2 class="section-title">Todo lo que su broker<br>necesita en una sola plataforma</h2>
+        <p class="section-sub" style="margin:0 auto;">Diseñada para brokers corporativos B2B en LATAM. Construida con especialistas de primer nivel de la industria.</p>
+      </div>
+      <div class="grid-2" style="gap:16px; margin-bottom:16px;">
+        <div class="card" style="background:linear-gradient(135deg,rgba(37,99,235,.1),var(--navy2)); border-color:rgba(96,165,250,.15);">
+          <div class="feat-icon" style="background:rgba(37,99,235,.15); color:var(--sky);">⚡</div>
+          <h3 style="font-size:1.3rem; margin-bottom:12px;">Opera mejor</h3>
+          <p style="color:var(--g2); font-size:.92rem; line-height:1.7;">El comparativo de 4 aseguradoras que tardaba 6 horas se genera en minutos. El slip se arma automáticamente desde el historial. Tiempo activo por cotización: 30 minutos.</p>
+          <div style="margin-top:20px;"><span class="pill pill-blue">3 días → 30 minutos</span></div>
+        </div>
+        <div class="card" style="background:linear-gradient(135deg,rgba(5,150,105,.08),var(--navy2)); border-color:rgba(110,231,183,.12);">
+          <div class="feat-icon" style="background:rgba(5,150,105,.15); color:var(--emerald);">📈</div>
+          <h3 style="font-size:1.3rem; margin-bottom:12px;">Vende más</h3>
+          <p style="color:var(--g2); font-size:.92rem; line-height:1.7;">La IA analiza el perfil de cada cliente y detecta coberturas faltantes, oportunidades de cross-sell y up-sell automáticamente. Un ejecutivo junior trabaja como uno senior.</p>
+          <div style="margin-top:20px;"><span class="pill pill-green">Cross-sell automático</span></div>
+        </div>
+      </div>
+      <div class="grid-2" style="gap:16px;">
+        <div class="card" style="background:linear-gradient(135deg,rgba(245,158,11,.07),var(--navy2)); border-color:rgba(245,158,11,.15);">
+          <div class="feat-icon" style="background:rgba(245,158,11,.15); color:var(--amber);">💰</div>
+          <h3 style="font-size:1.3rem; margin-bottom:12px;">Ahorra hasta 66%</h3>
+          <p style="color:var(--g2); font-size:.92rem; line-height:1.7;">De $13.48 USD por póliza a $5.00 USD. La implementación de $5,000 se recupera en el primer mes solo con el ahorro operativo. Desde el mes 2 es ganancia neta.</p>
+          <div style="margin-top:20px;"><span class="pill pill-amber">ROI desde el mes 1</span></div>
+        </div>
+        <div class="card" style="background:linear-gradient(135deg,rgba(220,38,38,.07),var(--navy2)); border-color:rgba(252,165,165,.1);">
+          <div class="feat-icon" style="background:rgba(220,38,38,.12); color:#FCA5A5;">🛡️</div>
+          <h3 style="font-size:1.3rem; margin-bottom:12px;">Cero errores</h3>
+          <p style="color:var(--g2); font-size:.92rem; line-height:1.7;">Validación automática cláusula por cláusula entre la póliza emitida y el slip. Detecta el cambio de "o" por "y" que ningún humano nota — antes del despacho al cliente.</p>
+          <div style="margin-top:20px;"><span class="pill pill-red">Validación automática</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROBLEM -->
+  <section style="background:var(--navy2); padding:80px 5%;">
+    <div class="container">
+      <div class="grid-2" style="align-items:center; gap:80px;">
+        <div>
+          <div class="label"><span class="label-dot"></span>El problema</div>
+          <h2 class="section-title">Su equipo pierde<br>3 días por cotización</h2>
+          <p style="color:var(--g2); line-height:1.75; margin-bottom:32px;">Los brokers corporativos en LATAM gestionan millones en primas con las mismas herramientas de hace 20 años: Excel, PDFs y correos. Un cambio de "o" por "y" en una póliza puede generar siniestros rechazados en cadena.</p>
+          <button class="btn btn-secondary" onclick="go('producto')">Ver la solución →</button>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:16px;">
+          <div style="background:rgba(220,38,38,.08); border:1px solid rgba(220,38,38,.2); border-radius:14px; padding:20px 24px;">
+            <div style="color:#FCA5A5; font-weight:700; font-size:1.8rem; font-family:'Syne',sans-serif;">S/ 51</div>
+            <div style="color:var(--g2); font-size:.88rem; margin-top:4px;">Costo real por póliza comparada (tiempo humano)</div>
+          </div>
+          <div style="background:rgba(245,158,11,.08); border:1px solid rgba(245,158,11,.2); border-radius:14px; padding:20px 24px;">
+            <div style="color:var(--amber); font-weight:700; font-size:1.8rem; font-family:'Syne',sans-serif;">14–22 horas</div>
+            <div style="color:var(--g2); font-size:.88rem; margin-top:4px;">Tiempo activo por cotización manual</div>
+          </div>
+          <div style="background:rgba(96,165,250,.08); border:1px solid rgba(96,165,250,.2); border-radius:14px; padding:20px 24px; border-left:4px solid var(--sky);">
+            <div style="color:var(--sky); font-size:.88rem; font-style:italic; line-height:1.65;">"Revisar los comparativos es lo más tedioso. Son amanecidas en licitaciones."</div>
+            <div style="color:var(--g3); font-size:.8rem; margin-top:10px;">— Especialista de Placement · Lima, Perú</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SOCIAL PROOF -->
+  <section>
+    <div class="container">
+      <div style="text-align:center; margin-bottom:56px;">
+        <div class="label"><span class="label-dot"></span>Validación</div>
+        <h2 class="section-title">Construido con los mejores</h2>
+        <p class="section-sub" style="margin:0 auto;">Desarrollado junto a los mejores expertos de la industria aseguradora en LATAM.</p>
+      </div>
+      <div class="grid-2" style="gap:24px;">
+        <div class="testimonial">
+          <p class="testimonial-text">"Un comparador que cruza los condicionados cláusula por cláusula sería un golazo. Hoy lo hacemos a mano y nos toma horas."</p>
+          <div class="testimonial-author">
+            <div class="author-avatar">MP</div>
+            <div>
+              <div class="author-name">Especialista de Placement</div>
+              <div class="author-role">Experta del sector asegurador · Lima, Perú</div>
+            </div>
+          </div>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:16px;">
+          <div class="card" style="flex:1;">
+            <div style="font-size:2rem; font-family:'Syne',sans-serif; font-weight:800; color:var(--sky); margin-bottom:8px;">7 etapas</div>
+            <div style="font-size:.88rem; color:var(--g2);">Del proceso completo validadas con brokers reales en campo</div>
+          </div>
+          <div class="card" style="flex:1;">
+            <div style="font-size:2rem; font-family:'Syne',sans-serif; font-weight:800; color:var(--emerald); margin-bottom:8px;">140+ páginas</div>
+            <div style="font-size:.88rem; color:var(--g2);">De pólizas reales analizadas (Pacífico + La Positiva)</div>
+          </div>
+          <div class="card" style="flex:1;">
+            <div style="font-size:2rem; font-family:'Syne',sans-serif; font-weight:800; color:var(--amber); margin-bottom:8px;">100%</div>
+            <div style="font-size:.88rem; color:var(--g2);">Proceso diseñado desde entrevistas con profesionales del sector</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section>
+    <div class="container">
+      <div class="cta-section">
+        <div class="label" style="margin:0 auto 24px;"><span class="label-dot"></span>Empieza hoy</div>
+        <h2>Su broker merece<br>operar a otro nivel.</h2>
+        <p>Cada mes sin InsurgIA le cuesta S/ 3,791 en tiempo operativo. La implementación toma hasta 3 meses.</p>
+        <div class="cta-actions">
+          <button class="btn btn-green btn-lg" onclick="go('contacto')">Empieza a ahorrar este mes →</button>
+          <button class="btn btn-secondary btn-lg" onclick="go('precios')">Ver precios</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="logo" style="cursor:default;">
+            <div class="logo-mark">I</div>
+            Insurg<span style="color:var(--sky);">IA</span>
+          </div>
+          <p>La plataforma que automatiza el ciclo completo de cotización para brokers corporativos en LATAM.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Producto</h4>
+          <a onclick="go('producto')">Cómo funciona</a>
+          <a onclick="go('producto')">Características</a>
+          <a onclick="go('precios')">Precios</a>
+        </div>
+        <div class="footer-col">
+          <h4>Empresa</h4>
+          <a onclick="go('nosotros')">Quiénes somos</a>
+          <a onclick="go('nosotros')">Misión y visión</a>
+          <a onclick="go('contacto')">Contacto</a>
+        </div>
+        <div class="footer-col">
+          <h4>Contacto</h4>
+          <a>franco.parodi.sanchez@outlook.com</a>
+          <a>insurgia.pe</a>
+          <a>Lima, Perú</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2026 InsurgIA Technologies SAC · Lima, Perú</p>
+        <p style="color:var(--g3);">Todos los derechos reservados</p>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<!-- ████████████████████████████████
+     PAGE: PRODUCTO
+████████████████████████████████ -->
+<div class="page" id="page-producto">
+  <section style="padding-top:120px;">
+    <div class="container">
+      <button class="back-btn" onclick="go('home')">← Volver al inicio</button>
+      <div class="label"><span class="label-dot"></span>El producto</div>
+      <h1 class="section-title" style="max-width:700px;">El sistema operativo<br>del broker moderno</h1>
+      <p class="section-sub" style="margin-bottom:64px;">InsurgIA automatiza las 7 etapas del proceso de cotización end-to-end. Desde la alerta de vencimiento hasta el despacho formal al cliente.</p>
+
+      <!-- 7 ETAPAS -->
+      <h3 style="font-size:1.2rem; margin-bottom:24px; color:var(--g2); font-family:'DM Sans',sans-serif; font-weight:500;">Las 7 etapas del proceso</h3>
+      <div style="display:flex; flex-direction:column; gap:12px; margin-bottom:80px;">
+        <div class="process-step">
+          <div class="step-num" style="background:rgba(245,158,11,.15); color:var(--amber);">01</div>
+          <div>
+            <div style="font-weight:600; margin-bottom:4px;">Aviso de vencimiento automático</div>
+            <div style="color:var(--g2); font-size:.9rem;">Alertas a 90, 60 y 30 días antes del vencimiento. Nunca más una póliza vence sin que el ejecutivo lo sepa a tiempo.</div>
+          </div>
+          <span class="pill pill-amber" style="margin-left:auto; flex-shrink:0;">✦ IA</span>
+        </div>
+        <div class="process-step">
+          <div class="step-num" style="background:rgba(14,165,233,.15); color:var(--teal);">02</div>
+          <div>
+            <div style="font-weight:600; margin-bottom:4px;">Generación automática del slip</div>
+            <div style="color:var(--g2); font-size:.9rem;">El slip se genera desde el historial de la póliza anterior. El ejecutivo ajusta lo necesario y lo envía con un clic.</div>
+          </div>
+          <span class="pill pill-blue" style="margin-left:auto; flex-shrink:0;">✦ IA</span>
+        </div>
+        <div class="process-step">
+          <div class="step-num" style="background:rgba(96,165,250,.15); color:var(--sky);">03</div>
+          <div>
+            <div style="font-weight:600; margin-bottom:4px;">Salida al mercado</div>
+            <div style="color:var(--g2); font-size:.9rem;">Envío automático a aseguradoras integradas. Para las demás, genera el archivo listo para enviar por correo.</div>
+          </div>
+          <span class="pill pill-blue" style="margin-left:auto; flex-shrink:0;">Auto</span>
+        </div>
+        <div class="process-step" style="border-color:rgba(37,99,235,.3); background:linear-gradient(135deg,rgba(37,99,235,.08),var(--navy2));">
+          <div class="step-num" style="background:rgba(37,99,235,.2); color:var(--sky);">04</div>
+          <div>
+            <div style="font-weight:600; margin-bottom:4px;">Comparativo IA — El diferencial clave</div>
+            <div style="color:var(--g2); font-size:.9rem;">La IA lee los PDFs de 4 aseguradoras, extrae prima, deducible, coberturas y <strong style="color:var(--emerald);">comisiones del broker</strong>, y genera el cuadro comparativo estandarizado en minutos.</div>
+          </div>
+          <span class="pill pill-green" style="margin-left:auto; flex-shrink:0;">⭐ Core</span>
+        </div>
+        <div class="process-step">
+          <div class="step-num" style="background:rgba(124,58,237,.15); color:#C4B5FD;">05</div>
+          <div>
+            <div style="font-weight:600; margin-bottom:4px;">Orden de colocación</div>
+            <div style="color:var(--g2); font-size:.9rem;">El ejecutivo confirma con el cliente y genera la orden de colocación con comisiones y slips adjuntos automáticamente.</div>
+          </div>
+          <span class="pill" style="background:rgba(124,58,237,.15);color:#C4B5FD;border:1px solid rgba(196,181,253,.2);margin-left:auto;flex-shrink:0;">Auto</span>
+        </div>
+        <div class="process-step" style="border-color:rgba(220,38,38,.25); background:linear-gradient(135deg,rgba(220,38,38,.06),var(--navy2));">
+          <div class="step-num" style="background:rgba(220,38,38,.15); color:#FCA5A5;">06</div>
+          <div>
+            <div style="font-weight:600; margin-bottom:4px;">Validación póliza vs. slip — El control crítico</div>
+            <div style="color:var(--g2); font-size:.9rem;">InsurgIA compara la póliza emitida contra el slip cláusula por cláusula. Detecta discrepancias antes del despacho — incluyendo cambios de una sola palabra que pueden invalidar coberturas.</div>
+          </div>
+          <span class="pill pill-red" style="margin-left:auto; flex-shrink:0;">⭐ Único</span>
+        </div>
+        <div class="process-step">
+          <div class="step-num" style="background:rgba(5,150,105,.15); color:var(--emerald);">07</div>
+          <div>
+            <div style="font-weight:600; margin-bottom:4px;">Despacho formal al cliente</div>
+            <div style="color:var(--g2); font-size:.9rem;">Póliza, financiamiento, carta membretada y garantías generadas automáticamente. Despacho al cliente con un clic.</div>
+          </div>
+          <span class="pill pill-green" style="margin-left:auto; flex-shrink:0;">Auto</span>
+        </div>
+      </div>
+
+      <!-- FEATURES GRID -->
+      <div style="text-align:center; margin-bottom:48px;">
+        <h2 class="section-title">Características principales</h2>
+      </div>
+      <div class="grid-3" style="margin-bottom:80px;">
+        <div class="card">
+          <div class="feat-icon" style="background:rgba(96,165,250,.1); color:var(--sky);">📊</div>
+          <h4 style="margin-bottom:8px;">Dashboard en tiempo real</h4>
+          <p style="color:var(--g2); font-size:.88rem; line-height:1.65;">KPIs por ejecutivo, pólizas por estado, comisiones mensuales. Vista líder para el gerente, vista operativa para el equipo.</p>
+        </div>
+        <div class="card">
+          <div class="feat-icon" style="background:rgba(110,231,183,.1); color:var(--emerald);">🤖</div>
+          <h4 style="margin-bottom:8px;">Cross-sell y up-sell con IA</h4>
+          <p style="color:var(--g2); font-size:.88rem; line-height:1.65;">La IA detecta coberturas faltantes por industria y perfil de riesgo. Recomienda ampliaciones y nuevas coberturas con argumentos técnicos listos para presentar al cliente.</p>
+        </div>
+        <div class="card">
+          <div class="feat-icon" style="background:rgba(245,158,11,.1); color:var(--amber);">⚠️</div>
+          <h4 style="margin-bottom:8px;">Alertas de vencimiento</h4>
+          <p style="color:var(--g2); font-size:.88rem; line-height:1.65;">Sistema automático de alertas a 90, 60 y 30 días. Notificaciones por correo al ejecutivo asignado. Nunca más una póliza vence sin aviso.</p>
+        </div>
+        <div class="card">
+          <div class="feat-icon" style="background:rgba(37,99,235,.1); color:var(--sky);">📄</div>
+          <h4 style="margin-bottom:8px;">Extracción IA de PDFs</h4>
+          <p style="color:var(--g2); font-size:.88rem; line-height:1.65;">Lee PDFs, Word y texto plano de cualquier aseguradora. Extrae prima, deducibles, sublímites, cláusulas especiales y comisiones automáticamente.</p>
+        </div>
+        <div class="card">
+          <div class="feat-icon" style="background:rgba(14,165,233,.1); color:var(--teal);">🔗</div>
+          <h4 style="margin-bottom:8px;">Integración con aseguradoras</h4>
+          <p style="color:var(--g2); font-size:.88rem; line-height:1.65;">Integración API con las principales aseguradoras del mercado peruano. Envío y recepción automático de cotizaciones. Cotizada por empresa según el proyecto.</p>
+        </div>
+        <div class="card">
+          <div class="feat-icon" style="background:rgba(124,58,237,.1); color:#C4B5FD;">📈</div>
+          <h4 style="margin-bottom:8px;">Reportes de comisiones</h4>
+          <p style="color:var(--g2); font-size:.88rem; line-height:1.65;">Historial de comisiones por ejecutivo, por ramo y por aseguradora. Exportable en PDF. 12 meses de data disponible en pantalla.</p>
+        </div>
+      </div>
+
+      <!-- COMPARISON TABLE -->
+      <div style="text-align:center; margin-bottom:48px;">
+        <h2 class="section-title">InsurgIA vs. el mercado</h2>
+        <p class="section-sub" style="margin:0 auto;">El mercado tiene piezas sueltas. InsurgIA es la primera que las une.</p>
+      </div>
+      <div style="background:var(--navy2); border:1px solid var(--border); border-radius:20px; overflow:hidden; margin-bottom:80px;">
+        <table class="comp-table">
+          <thead>
+            <tr>
+              <th>Capacidad</th>
+              <th style="color:var(--sky);">InsurgIA ★</th>
+              <th>Zywave</th>
+              <th>Foliume</th>
+              <th>Excel + email</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Comparativo IA desde PDFs</td>
+              <td class="highlight comp-yes">✓ Nativo</td>
+              <td class="comp-partial">Parcial</td>
+              <td class="comp-no">✗</td>
+              <td class="comp-no">✗</td>
+            </tr>
+            <tr>
+              <td>Comisiones en el comparativo</td>
+              <td class="highlight comp-yes">✓ Incluidas</td>
+              <td class="comp-no">✗</td>
+              <td class="comp-no">✗</td>
+              <td class="comp-partial">Manual</td>
+            </tr>
+            <tr>
+              <td>Validación póliza vs. slip</td>
+              <td class="highlight comp-yes">✓ Automática</td>
+              <td class="comp-no">✗</td>
+              <td class="comp-no">✗</td>
+              <td class="comp-no">✗</td>
+            </tr>
+            <tr>
+              <td>Cross-sell con IA</td>
+              <td class="highlight comp-yes">✓ Nativo</td>
+              <td class="comp-no">✗</td>
+              <td class="comp-no">✗</td>
+              <td class="comp-no">✗</td>
+            </tr>
+            <tr>
+              <td>Alertas de vencimiento</td>
+              <td class="highlight comp-yes">✓ Automáticas</td>
+              <td class="comp-partial">Parcial</td>
+              <td class="comp-no">✗</td>
+              <td class="comp-no">✗</td>
+            </tr>
+            <tr>
+              <td>Mercado LATAM / Perú</td>
+              <td class="highlight comp-yes">✓ Core</td>
+              <td class="comp-no">✗ EE.UU.</td>
+              <td class="comp-partial">Parcial</td>
+              <td class="comp-yes">✓</td>
+            </tr>
+            <tr>
+              <td>B2B corporativo</td>
+              <td class="highlight comp-yes">✓ Core</td>
+              <td class="comp-partial">Parcial</td>
+              <td class="comp-no">✗ Agentes</td>
+              <td class="comp-partial">Manual</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="cta-section">
+        <h2>¿Listo para ver InsurgIA en acción?</h2>
+        <p>Coordinemos una reunión para una demo en vivo con datos reales de su operación.</p>
+        <div class="cta-actions">
+          <button class="btn btn-green btn-lg" onclick="go('contacto')">Solicitar demo personalizada →</button>
+          <button class="btn btn-secondary btn-lg" onclick="go('precios')">Ver precios</button>
+        </div>
+      </div>
+    </div>
+  </section>
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="logo" style="cursor:default;"><div class="logo-mark">I</div>Insurg<span style="color:var(--sky);">IA</span></div>
+          <p>La plataforma que automatiza el ciclo completo de cotización para brokers corporativos en LATAM.</p>
+        </div>
+        <div class="footer-col"><h4>Producto</h4><a onclick="go('producto')">Cómo funciona</a><a onclick="go('precios')">Precios</a></div>
+        <div class="footer-col"><h4>Empresa</h4><a onclick="go('nosotros')">Quiénes somos</a><a onclick="go('contacto')">Contacto</a></div>
+        <div class="footer-col"><h4>Contacto</h4><a>franco.parodi.sanchez@outlook.com</a><a>Lima, Perú</a></div>
+      </div>
+      <div class="footer-bottom"><p>© 2026 InsurgIA Technologies SAC</p><p style="color:var(--g3);">Todos los derechos reservados</p></div>
+    </div>
+  </footer>
+</div>
+
+<!-- ████████████████████████████████
+     PAGE: PRECIOS
+████████████████████████████████ -->
+<div class="page" id="page-precios">
+  <section style="padding-top:120px;">
+    <div class="container">
+      <button class="back-btn" onclick="go('home')">← Volver al inicio</button>
+      <div style="text-align:center; margin-bottom:64px;">
+        <div class="label"><span class="label-dot"></span>Precios</div>
+        <h1 class="section-title">Transparente. Sin sorpresas.</h1>
+        <p class="section-sub" style="margin:0 auto;">Un único pago de implementación y un fee mensual fijo. Sin planes, sin niveles, sin letra chica. Usted paga por el volumen real de trabajo que procesa.</p>
+      </div>
+
+      <!-- PRICING CARDS -->
+      <div class="grid-3" style="margin-bottom:64px; align-items:stretch;">
+
+        <!-- Implementación -->
+        <div class="pricing-card">
+          <div style="margin-bottom:16px;">
+            <div class="pill pill-amber" style="margin-bottom:12px;">PAGO ÚNICO</div>
+            <h3 style="font-size:1.2rem; margin-bottom:8px;">Implementación</h3>
+            <p style="color:var(--g2); font-size:.88rem;">Todo lo necesario para arrancar desde cero. Hasta 100 usuarios.*</p>
+          </div>
+          <div style="margin-bottom:6px;">
+            <span style="font-family:'Syne',sans-serif; font-size:1.4rem; font-weight:800; color:var(--g3); text-decoration:line-through;">$7,000</span>
+            <span style="font-size:.8rem; color:var(--g3);"> precio regular</span>
+          </div>
+          <div style="margin-bottom:6px; display:flex; align-items:center; gap:10px;">
+            <span class="price-num" style="color:var(--amber);">$5,000</span>
+            <span class="price-period"> one-time</span>
+          </div>
+          <div style="background:rgba(220,38,38,.1); border:1px solid rgba(220,38,38,.25); border-radius:8px; padding:8px 14px; margin-bottom:20px; display:flex; align-items:center; gap:8px;">
+            <span style="font-size:.9rem;">🔥</span>
+            <span style="font-size:.82rem; color:#FCA5A5; font-weight:600;">Oferta por tiempo limitado — Ahorra $2,000</span>
+          </div>
+          <div style="margin-bottom:20px;">
+            <div class="price-item"><span class="price-check">✓</span> Configuración completa de la plataforma</div>
+            <div class="price-item"><span class="price-check">✓</span> Carga inicial de cartera de clientes</div>
+            <div class="price-item"><span class="price-check">✓</span> Capacitación del equipo</div>
+            <div class="price-item"><span class="price-check">✓</span> Soporte dedicado primeros 30 días</div>
+            <div class="price-item"><span class="price-check">✓</span> Implementación en hasta 3 meses</div>
+          </div>
+          <div style="background:rgba(245,158,11,.08); border:1px solid rgba(245,158,11,.2); border-radius:10px; padding:12px 14px; font-size:.82rem; color:var(--amber);">
+            💡 Se recupera en los primeros meses con el ahorro operativo
+          </div>
+        </div>
+
+        <!-- Fee mensual (destacado) -->
+        <div class="pricing-card featured" style="">
+          <div class="pricing-badge">MÁS POPULAR</div>
+          <div style="margin-bottom:24px; margin-top:16px;">
+            <div class="pill pill-blue" style="margin-bottom:16px;">MENSUAL FIJO</div>
+            <h3 style="font-size:1.2rem; margin-bottom:8px;">Fee de mantenimiento</h3>
+            <p style="color:var(--g2); font-size:.88rem;">Hosting, soporte y 50 pólizas procesadas incluidas.</p>
+          </div>
+          <div style="margin-bottom:8px;">
+            <span class="price-num" style="color:var(--sky);">$500</span>
+            <span class="price-period"> /mes</span>
+          </div>
+          <div style="background:rgba(37,99,235,.15); border:1px solid rgba(96,165,250,.2); border-radius:8px; padding:10px; text-align:center; margin-bottom:8px; font-size:.85rem; color:var(--sky); font-weight:600;">
+            50 pólizas procesadas incluidas / mes · Hasta 100 usuarios*
+          </div>
+          <div style="margin-bottom:28px;">
+            <div class="price-item"><span class="price-check">✓</span> Hosting y disponibilidad 24/7</div>
+            <div class="price-item"><span class="price-check">✓</span> Soporte técnico continuo</div>
+            <div class="price-item"><span class="price-check">✓</span> Actualizaciones de la plataforma</div>
+            <div class="price-item"><span class="price-check">✓</span> Usuarios ilimitados</div>
+            <div class="price-item"><span class="price-check">✓</span> Dashboard y reportes completos</div>
+          </div>
+          <button class="btn btn-primary" style="width:100%; justify-content:center;" onclick="go('contacto')">Empezar ahora →</button>
+          <p style="text-align:center; font-size:.8rem; color:var(--g3); margin-top:12px;">17% de descuento pagando el año completo</p>
+          <p style="text-align:center; font-size:.78rem; color:var(--g3); margin-top:6px;">* Hasta 100 usuarios incluidos</p>
+        </div>
+
+        <!-- Variable -->
+        <div class="pricing-card">
+          <div style="margin-bottom:24px;">
+            <div class="pill pill-green" style="margin-bottom:16px;">VARIABLE</div>
+            <h3 style="font-size:1.2rem; margin-bottom:8px;">Pólizas adicionales</h3>
+            <p style="color:var(--g2); font-size:.88rem;">A partir de la póliza #51 del mes.</p>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:28px;">
+            <div style="background:rgba(5,150,105,.08); border:1px solid rgba(5,150,105,.2); border-radius:10px; padding:16px;">
+              <div style="font-family:'Syne',sans-serif; font-size:1.5rem; font-weight:800; color:var(--emerald);">$8.00</div>
+              <div style="font-size:.82rem; color:var(--g2); margin-top:4px;">por póliza · tramo 51–150</div>
+            </div>
+            <div style="background:rgba(14,165,233,.08); border:1px solid rgba(14,165,233,.2); border-radius:10px; padding:16px;">
+              <div style="font-family:'Syne',sans-serif; font-size:1.5rem; font-weight:800; color:var(--teal);">$6.00</div>
+              <div style="font-size:.82rem; color:var(--g2); margin-top:4px;">por póliza · tramo 151–550</div>
+            </div>
+            <div style="background:rgba(96,165,250,.08); border:1px solid rgba(96,165,250,.2); border-radius:10px; padding:16px;">
+              <div style="font-family:'Syne',sans-serif; font-size:1.5rem; font-weight:800; color:var(--sky);">$5.00</div>
+              <div style="font-size:.82rem; color:var(--g2); margin-top:4px;">por póliza · tramo &gt;550</div>
+            </div>
+          </div>
+          <div style="font-size:.82rem; color:var(--g3); border-top:1px solid var(--border); padding-top:16px;">
+            Usuarios adicionales y integración API con aseguradoras se cotizan por separado.
+          </div>
+        </div>
+      </div>
+
+      <!-- FAQ PRECIOS -->
+      <div style="background:rgba(255,255,255,.03); border:1px solid var(--border); border-radius:12px; padding:16px 24px; max-width:720px; margin:0 auto 32px; font-size:.85rem; color:var(--g2); line-height:1.65;">
+        * Los precios de implementación ($5,000 oferta / $7,000 regular) y fee mensual ($500) aplican para operaciones de hasta 100 usuarios. Para cotizaciones con más de 100 usuarios, por favor póngase en contacto con nuestro equipo en <strong style="color:var(--sky);">franco.parodi.sanchez@outlook.com</strong>
+      </div>
+      <div style="max-width:720px; margin:0 auto 80px;">
+        <h3 style="font-size:1.5rem; margin-bottom:32px; text-align:center;">Preguntas frecuentes</h3>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">
+            ¿Qué incluye la implementación de $5,000?
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-a">La implementación incluye la configuración completa de la plataforma para su operación, la carga inicial de su cartera de clientes, capacitación del equipo en dos sesiones, configuración de los flujos de trabajo según sus procesos y soporte dedicado durante los primeros 30 días. La implementación toma hasta 3 meses e incluye hasta 100 usuarios. Para operaciones con más de 100 usuarios, contáctenos para una cotización personalizada.</div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">
+            ¿Qué pasa si proceso más de 50 pólizas al mes?
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-a">Desde la póliza #51 aplica el cobro variable por tramos: $8 por póliza entre la 51 y la 150, $6 entre la 151 y la 550, y $5 por cada una que supere las 550. El cobro se calcula automáticamente y se consolida en la factura del mes.</div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">
+            ¿Cuántos usuarios puede tener en la plataforma?
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-a">El fee mensual de $500 incluye hasta 100 usuarios. Para operaciones con más de 100 usuarios, contáctenos para una cotización personalizada adaptada al tamaño de su equipo.</div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">
+            ¿La integración API con aseguradoras tiene costo adicional?
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-a">Sí. Cada aseguradora requiere un proyecto de integración independiente que se cotiza por separado según la complejidad técnica. No todas las aseguradoras tienen el mismo nivel de API disponible. Lo evaluamos juntos antes de arrancar para que sepa exactamente qué esperar.</div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">
+            ¿Puedo probar InsurgIA antes de comprometerme?
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-a">Sí. Coordinamos una reunión para una demo en vivo personalizada. Le mostramos InsurgIA funcionando con datos reales de su ramo y tipo de cliente, para que evalúe el valor directamente. Escríbanos a <strong>franco.parodi.sanchez@outlook.com</strong> para agendar una reunión.</div>
+        </div>
+      </div>
+
+      <div class="cta-section">
+        <h2>Empiece a ahorrar este mes.</h2>
+        <p>La implementación toma hasta 3 meses. El ahorro empieza el primer mes de operación.</p>
+        <div class="cta-actions">
+          <button class="btn btn-green btn-lg" onclick="go('contacto')">Activar InsurgIA →</button>
+          <button class="btn btn-secondary btn-lg" onclick="go('producto')">Ver el producto</button>
+        </div>
+      </div>
+    </div>
+  </section>
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand"><div class="logo" style="cursor:default;"><div class="logo-mark">I</div>Insurg<span style="color:var(--sky);">IA</span></div><p>Automatizamos el ciclo completo de cotización para brokers corporativos en LATAM.</p></div>
+        <div class="footer-col"><h4>Producto</h4><a onclick="go('producto')">Cómo funciona</a><a onclick="go('precios')">Precios</a></div>
+        <div class="footer-col"><h4>Empresa</h4><a onclick="go('nosotros')">Quiénes somos</a><a onclick="go('contacto')">Contacto</a></div>
+        <div class="footer-col"><h4>Contacto</h4><a>franco.parodi.sanchez@outlook.com</a><a>Lima, Perú</a></div>
+      </div>
+      <div class="footer-bottom"><p>© 2026 InsurgIA Technologies SAC</p><p style="color:var(--g3);">Todos los derechos reservados</p></div>
+    </div>
+  </footer>
+</div>
+
+<!-- ████████████████████████████████
+     PAGE: NOSOTROS
+████████████████████████████████ -->
+<div class="page" id="page-nosotros">
+  <section style="padding-top:120px;">
+    <div class="container">
+      <button class="back-btn" onclick="go('home')">← Volver al inicio</button>
+      <div class="label"><span class="label-dot"></span>Quiénes somos</div>
+      <h1 class="section-title" style="max-width:680px; margin-bottom:24px;">Construimos la plataforma que la industria necesitaba.</h1>
+      <p style="color:var(--g2); font-size:1.05rem; max-width:620px; line-height:1.8; margin-bottom:80px;">InsurgIA nació de una observación simple: los brokers corporativos en LATAM gestionan carteras de millones de dólares con las mismas herramientas de hace 20 años. Existe la tecnología para cambiar eso. Solo faltaba alguien que lo construyera bien.</p>
+
+      <!-- MISIÓN Y VISIÓN -->
+      <div class="grid-2" style="gap:24px; margin-bottom:80px;">
+        <div class="card" style="background:linear-gradient(135deg,rgba(37,99,235,.1),var(--navy2)); border-color:rgba(96,165,250,.2);">
+          <div style="font-size:2rem; margin-bottom:16px;">🎯</div>
+          <h3 style="margin-bottom:16px; font-size:1.3rem;">Misión</h3>
+          <p style="color:var(--g2); line-height:1.75;">Automatizar el ciclo operativo del broker de seguros corporativo en LATAM, para que su equipo dedique su tiempo a lo que realmente importa: asesorar bien a sus clientes y hacer crecer su cartera.</p>
+        </div>
+        <div class="card" style="background:linear-gradient(135deg,rgba(5,150,105,.08),var(--navy2)); border-color:rgba(110,231,183,.15);">
+          <div style="font-size:2rem; margin-bottom:16px;">🔭</div>
+          <h3 style="margin-bottom:16px; font-size:1.3rem;">Visión</h3>
+          <p style="color:var(--g2); line-height:1.75;">Ser la plataforma operativa estándar del broker corporativo en América Latina — el sistema que conecta brokers, aseguradoras y clientes en un ecosistema inteligente y transparente.</p>
+        </div>
+      </div>
+
+      <!-- VALORES -->
+      <div style="text-align:center; margin-bottom:48px;">
+        <h2 class="section-title">Nuestros valores</h2>
+      </div>
+      <div class="grid-4" style="margin-bottom:80px;">
+        <div class="card" style="text-align:center;">
+          <div style="font-size:2rem; margin-bottom:12px;">🔍</div>
+          <h4 style="margin-bottom:8px;">Rigor técnico</h4>
+          <p style="color:var(--g2); font-size:.85rem; line-height:1.65;">Construimos sobre datos reales, no supuestos. Cada funcionalidad fue validada con profesionales del sector antes de desarrollarse.</p>
+        </div>
+        <div class="card" style="text-align:center;">
+          <div style="font-size:2rem; margin-bottom:12px;">🤝</div>
+          <h4 style="margin-bottom:8px;">Honestidad</h4>
+          <p style="color:var(--g2); font-size:.85rem; line-height:1.65;">Sin promesas exageradas. Los números que presentamos son verificables y conservadores.</p>
+        </div>
+        <div class="card" style="text-align:center;">
+          <div style="font-size:2rem; margin-bottom:12px;">⚡</div>
+          <h4 style="margin-bottom:8px;">Velocidad</h4>
+          <p style="color:var(--g2); font-size:.85rem; line-height:1.65;">El mercado no espera. Iteramos rápido, escuchamos a nuestros clientes y mejoramos la plataforma semana a semana.</p>
+        </div>
+        <div class="card" style="text-align:center;">
+          <div style="font-size:2rem; margin-bottom:12px;">🛡️</div>
+          <h4 style="margin-bottom:8px;">Seguridad</h4>
+          <p style="color:var(--g2); font-size:.85rem; line-height:1.65;">Los datos de sus clientes son sagrados. Encriptación AES-256, infraestructura enterprise y cumplimiento normativo SBS.</p>
+        </div>
+      </div>
+
+      <!-- EQUIPO -->
+      <div style="text-align:center; margin-bottom:48px;">
+        <h2 class="section-title">El equipo</h2>
+        <p class="section-sub" style="margin:0 auto;">El equipo correcto para este problema específico.</p>
+      </div>
+      <div class="grid-2" style="margin-bottom:80px; max-width:800px; margin-left:auto; margin-right:auto;">
+        <div class="card team-card">
+          <div class="team-avatar" style="background:linear-gradient(135deg,var(--blue2),var(--teal));">F</div>
+          <div class="team-name">Franco</div>
+          <div class="team-role">CEO & Founder</div>
+          <div class="team-bio">MBA Entrepreneurship. Lidera la visión de producto y estrategia comercial. Conocimiento profundo del sector seguros B2B en LATAM.</div>
+        </div>
+        <div class="card team-card">
+          <div class="team-avatar" style="background:linear-gradient(135deg,var(--teal),var(--emerald));">CTO</div>
+          <div class="team-name">Elder Yana</div>
+          <div class="team-role">CTO</div>
+          <div class="team-bio">Arquitectura AWS Bedrock e IA. Experiencia en software empresarial B2B. Lidera el roadmap técnico y el equipo de desarrollo.</div>
+        </div>
+        
+      </div>
+
+      <!-- HISTORIA / TIMELINE -->
+      <div style="text-align:center; margin-bottom:48px;">
+        <h2 class="section-title">Nuestra historia</h2>
+      </div>
+      <div style="max-width:640px; margin:0 auto 80px; position:relative;">
+        <div style="position:absolute; left:22px; top:0; bottom:0; width:2px; background:var(--border);"></div>
+        <div style="display:flex; flex-direction:column; gap:32px;">
+          <div style="display:flex; gap:24px; align-items:flex-start;">
+            <div style="width:46px; height:46px; border-radius:50%; background:var(--blue2); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:.82rem; flex-shrink:0; z-index:1;">2025</div>
+            <div style="padding-top:10px;">
+              <div style="font-weight:600; margin-bottom:6px;">Identificación del problema</div>
+              <div style="color:var(--g2); font-size:.88rem; line-height:1.65;">Análisis del mercado de seguros LATAM. Entrevistas con brokers corporativos y equipos de placement de firmas de primer nivel.</div>
+            </div>
+          </div>
+          <div style="display:flex; gap:24px; align-items:flex-start;">
+            <div style="width:46px; height:46px; border-radius:50%; background:var(--teal); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:.82rem; flex-shrink:0; z-index:1;">Q4</div>
+            <div style="padding-top:10px;">
+              <div style="font-weight:600; margin-bottom:6px;">Validación con expertos del sector</div>
+              <div style="color:var(--g2); font-size:.88rem; line-height:1.65;">Mapeamos las 7 etapas del proceso real con expertos de la industria aseguradora. La IA fue entrenada durante más de 6 meses con pólizas reales del mercado peruano.</div>
+            </div>
+          </div>
+          <div style="display:flex; gap:24px; align-items:flex-start;">
+            <div style="width:46px; height:46px; border-radius:50%; background:var(--green); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:.82rem; flex-shrink:0; z-index:1;">2026</div>
+            <div style="padding-top:10px;">
+              <div style="font-weight:600; margin-bottom:6px;">MVP y primeros clientes</div>
+              <div style="color:var(--g2); font-size:.88rem; line-height:1.65;">Dashboard interactivo con 11 módulos construido. Equipo fundador completo. Primeros clientes piloto en negociación.</div>
+            </div>
+          </div>
+          <div style="display:flex; gap:24px; align-items:flex-start;">
+            <div style="width:46px; height:46px; border-radius:50%; background:var(--amber); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:.78rem; flex-shrink:0; z-index:1; color:var(--navy);">Next</div>
+            <div style="padding-top:10px;">
+              <div style="font-weight:600; margin-bottom:6px;">Expansión LATAM</div>
+              <div style="color:var(--g2); font-size:.88rem; line-height:1.65;">10 clientes activos en Perú. Inicio de operaciones en Colombia. Ronda seed para acelerar el crecimiento.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="cta-section">
+        <h2>¿Quiere ser parte<br>de esta historia?</h2>
+        <p>Conversemos sobre cómo InsurgIA puede transformar la operación de su broker.</p>
+        <div class="cta-actions">
+          <button class="btn btn-primary btn-lg" onclick="go('contacto')">Hablar con el equipo →</button>
+        </div>
+      </div>
+    </div>
+  </section>
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand"><div class="logo" style="cursor:default;"><div class="logo-mark">I</div>Insurg<span style="color:var(--sky);">IA</span></div><p>Automatizamos el ciclo completo de cotización para brokers corporativos en LATAM.</p></div>
+        <div class="footer-col"><h4>Producto</h4><a onclick="go('producto')">Cómo funciona</a><a onclick="go('precios')">Precios</a></div>
+        <div class="footer-col"><h4>Empresa</h4><a onclick="go('nosotros')">Quiénes somos</a><a onclick="go('contacto')">Contacto</a></div>
+        <div class="footer-col"><h4>Contacto</h4><a>franco.parodi.sanchez@outlook.com</a><a>Lima, Perú</a></div>
+      </div>
+      <div class="footer-bottom"><p>© 2026 InsurgIA Technologies SAC</p><p style="color:var(--g3);">Todos los derechos reservados</p></div>
+    </div>
+  </footer>
+</div>
+
+<!-- ████████████████████████████████
+     PAGE: CONTACTO
+████████████████████████████████ -->
+<div class="page" id="page-contacto">
+  <section style="padding-top:120px;">
+    <div class="container">
+      <button class="back-btn" onclick="go('home')">← Volver al inicio</button>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:start;">
+
+        <!-- LEFT -->
+        <div>
+          <div class="label"><span class="label-dot"></span>Contacto</div>
+          <h1 class="section-title" style="margin-bottom:24px;">Empieza a ahorrar<br>este mes.</h1>
+          <p style="color:var(--g2); line-height:1.75; margin-bottom:40px;">Cuéntenos sobre su operación y le mostramos cómo InsurgIA puede transformarla. La demo es personalizada — usamos datos reales de su ramo y tipo de cliente.</p>
+
+          <div style="display:flex; flex-direction:column; gap:16px; margin-bottom:48px;">
+            <div style="display:flex; align-items:flex-start; gap:16px;">
+              <div style="width:44px; height:44px; border-radius:12px; background:rgba(37,99,235,.15); display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:1.1rem;">📧</div>
+              <div>
+                <div style="font-weight:600; margin-bottom:4px;">Email</div>
+                <div style="color:var(--g2); font-size:.9rem;">franco.parodi.sanchez@outlook.com</div>
+              </div>
+            </div>
+            <div style="display:flex; align-items:flex-start; gap:16px;">
+              <div style="width:44px; height:44px; border-radius:12px; background:rgba(5,150,105,.12); display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:1.1rem;">📍</div>
+              <div>
+                <div style="font-weight:600; margin-bottom:4px;">Ubicación</div>
+                <div style="color:var(--g2); font-size:.9rem;">Lima, Perú · Operaciones en LATAM</div>
+              </div>
+            </div>
+            <div style="display:flex; align-items:flex-start; gap:16px;">
+              <div style="width:44px; height:44px; border-radius:12px; background:rgba(245,158,11,.12); display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:1.1rem;">⏱️</div>
+              <div>
+                <div style="font-weight:600; margin-bottom:4px;">Tiempo de respuesta</div>
+                <div style="color:var(--g2); font-size:.9rem;">Respondemos en menos de 24 horas hábiles</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- What to expect -->
+          <div style="background:var(--navy2); border:1px solid var(--border); border-radius:16px; padding:24px;">
+            <h4 style="margin-bottom:16px; font-size:.95rem;">¿Qué pasa cuando nos contacta?</h4>
+            <div style="display:flex; flex-direction:column; gap:12px;">
+              <div style="display:flex; gap:12px; align-items:flex-start; font-size:.88rem; color:var(--g2);">
+                <span style="color:var(--emerald); font-weight:700; flex-shrink:0;">01.</span>
+                Nos contactamos en menos de 24 horas para agendar una llamada de 20 minutos.
+              </div>
+              <div style="display:flex; gap:12px; align-items:flex-start; font-size:.88rem; color:var(--g2);">
+                <span style="color:var(--emerald); font-weight:700; flex-shrink:0;">02.</span>
+                Le mostramos una demo en vivo personalizada con datos reales de su ramo principal.
+              </div>
+              <div style="display:flex; gap:12px; align-items:flex-start; font-size:.88rem; color:var(--g2);">
+                <span style="color:var(--emerald); font-weight:700; flex-shrink:0;">03.</span>
+                Si tiene sentido, agendamos una demo en vivo con datos reales de su operación.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- FORM -->
+        <div class="card" style="padding:40px;" id="contact-form-wrap">
+          <h3 style="margin-bottom:8px; font-size:1.3rem;">Solicitar demo o información</h3>
+          <p style="color:var(--g2); font-size:.88rem; margin-bottom:28px;">Cuéntenos sobre su operación y le contactamos en menos de 24 horas.</p>
+          <div id="form-content">
+            <div class="grid-2" style="gap:16px;">
+              <div class="form-group">
+                <label>Nombre *</label>
+                <input type="text" id="f-nombre" placeholder="Su nombre completo">
+              </div>
+              <div class="form-group">
+                <label>Empresa *</label>
+                <input type="text" id="f-empresa" placeholder="Nombre del broker">
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Email corporativo *</label>
+              <input type="email" id="f-email" placeholder="su@correo.com">
+            </div>
+            <div class="form-group">
+              <label>Número de WhatsApp</label>
+              <input type="text" id="f-tel" placeholder="+51 999 999 999">
+            </div>
+            <div class="form-group">
+              <label>¿Cuántas pólizas procesa al mes aproximadamente?</label>
+              <select id="f-polizas">
+                <option value="">Seleccionar...</option>
+                <option>Menos de 50</option>
+                <option>50–100</option>
+                <option>100–300</option>
+                <option>300–600</option>
+                <option>Más de 600</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>¿Qué ramos trabajan principalmente?</label>
+              <select id="f-ramo">
+                <option value="">Seleccionar...</option>
+                <option>Multirriesgo / Incendio</option>
+                <option>Flota vehicular</option>
+                <option>Responsabilidad civil</option>
+                <option>Salud / Vida</option>
+                <option>Varios ramos</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>¿Cómo podemos ayudarle?</label>
+              <textarea id="f-mensaje" placeholder="Cuéntenos sobre su operación actual, el principal problema que quiere resolver o cualquier pregunta que tenga..."></textarea>
+            </div>
+            <button class="btn btn-green" style="width:100%; justify-content:center; padding:16px;" onclick="submitForm()">
+              Solicitar demo personalizada →
+            </button>
+            <p style="text-align:center; font-size:.78rem; color:var(--g3); margin-top:12px;">Sin compromiso. Respondemos en menos de 24 horas hábiles.</p>
+            <p style="text-align:center; font-size:.72rem; color:var(--g4); margin-top:4px;">Sus datos son confidenciales y no serán compartidos con terceros.</p>
+          </div>
+          <div id="form-success" style="display:none; text-align:center; padding:40px 0;">
+            <div style="font-size:3rem; margin-bottom:20px;">✅</div>
+            <h3 style="margin-bottom:12px;">¡Solicitud recibida!</h3>
+            <p style="color:var(--g2); line-height:1.7;">Le contactaremos en menos de 24 horas hábiles para agendar la demo. Mientras tanto, si tiene alguna pregunta urgente puede escribirnos a <strong>franco.parodi.sanchez@outlook.com</strong></p>
+            <button class="btn btn-secondary" style="margin-top:24px;" onclick="go('home')">Volver al inicio</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <footer style="margin-top:80px;">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand"><div class="logo" style="cursor:default;"><div class="logo-mark">I</div>Insurg<span style="color:var(--sky);">IA</span></div><p>Automatizamos el ciclo completo de cotización para brokers corporativos en LATAM.</p></div>
+        <div class="footer-col"><h4>Producto</h4><a onclick="go('producto')">Cómo funciona</a><a onclick="go('precios')">Precios</a></div>
+        <div class="footer-col"><h4>Empresa</h4><a onclick="go('nosotros')">Quiénes somos</a><a onclick="go('contacto')">Contacto</a></div>
+        <div class="footer-col"><h4>Contacto</h4><a>franco.parodi.sanchez@outlook.com</a><a>Lima, Perú</a></div>
+      </div>
+      <div class="footer-bottom"><p>© 2026 InsurgIA Technologies SAC</p><p style="color:var(--g3);">Todos los derechos reservados</p></div>
+    </div>
+  </footer>
+</div>
+
+<script>
+// ── MOBILE MENU ──────────────────────────────────────────────────
+function toggleMenu() {
+  document.getElementById('mobile-menu').classList.toggle('open');
+}
+function closeMenu() {
+  document.getElementById('mobile-menu').classList.remove('open');
+}
+// Close menu on outside click
+document.addEventListener('click', function(e) {
+  const menu = document.getElementById('mobile-menu');
+  const btn = document.getElementById('hamburger-btn');
+  if (menu && !menu.contains(e.target) && !btn.contains(e.target)) {
+    menu.classList.remove('open');
+  }
+});
+
+// ── NAVIGATION ──────────────────────────────────────────────────
+function go(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+  const navEl = document.getElementById('nav-' + page);
+  if (navEl) navEl.classList.add('active');
+  closeMenu();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ── FAQ ──────────────────────────────────────────────────────────
+function toggleFaq(btn) {
+  const answer = btn.nextElementSibling;
+  const icon = btn.querySelector('.faq-icon');
+  const isOpen = answer.classList.contains('open');
+
+  // Close all
+  document.querySelectorAll('.faq-a').forEach(a => a.classList.remove('open'));
+  document.querySelectorAll('.faq-icon').forEach(i => i.classList.remove('open'));
+
+  if (!isOpen) {
+    answer.classList.add('open');
+    icon.classList.add('open');
+  }
+}
+
+// ── FORM ──────────────────────────────────────────────────────────
+async function submitForm() {
+  const nombre   = document.getElementById('f-nombre').value.trim();
+  const empresa  = document.getElementById('f-empresa').value.trim();
+  const email    = document.getElementById('f-email').value.trim();
+  const tel      = document.getElementById('f-tel').value.trim();
+  const polizas  = document.getElementById('f-polizas').value;
+  const ramo     = document.getElementById('f-ramo').value;
+  const mensaje  = document.getElementById('f-mensaje').value.trim();
+
+  if (!nombre || !empresa || !email) {
+    alert('Por favor complete los campos obligatorios: Nombre, Empresa y Email.');
+    return;
+  }
+  if (!email.includes('@')) {
+    alert('Por favor ingrese un email válido.');
+    return;
+  }
+
+  const btn = event.target;
+  btn.textContent = 'Enviando...';
+  btn.disabled = true;
+
+  try {
+    const res = await fetch('https://formspree.io/f/xvzddlnp', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({
+        nombre, empresa, email, telefono: tel,
+        polizas_mes: polizas, ramo_principal: ramo,
+        mensaje: mensaje || '(sin mensaje adicional)',
+        _subject: `[InsurgIA] Demo solicitada — ${empresa}`,
+        _replyto: email
+      })
+    });
+
+    if (res.ok) {
+      document.getElementById('form-content').style.display = 'none';
+      document.getElementById('form-success').style.display = 'block';
+    } else {
+      throw new Error('Error en el envío');
+    }
+  } catch(e) {
+    btn.textContent = 'Solicitar demo personalizada →';
+    btn.disabled = false;
+    alert('Hubo un error al enviar. Por favor escríbanos directamente a franco.parodi.sanchez@outlook.com');
+  }
+}
+
+// ── NAV SCROLL EFFECT ────────────────────────────────────────────
+window.addEventListener('scroll', () => {
+  const nav = document.getElementById('main-nav');
+  nav.style.background = window.scrollY > 20
+    ? 'rgba(6,14,28,0.97)'
+    : 'rgba(6,14,28,0.88)';
+});
+
+// ── STAGGER ANIMATION ON CARDS ───────────────────────────────────
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach((entry, i) => {
+    if (entry.isIntersecting) {
+      setTimeout(() => {
+        entry.target.style.opacity = '1';
+        entry.target.style.transform = 'translateY(0)';
+      }, i * 80);
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.card, .process-step, .pricing-card').forEach(el => {
+  el.style.opacity = '0';
+  el.style.transform = 'translateY(20px)';
+  el.style.transition = 'opacity .5s ease, transform .5s ease';
+  observer.observe(el);
+});
+</script>
+</body>
+</html>
